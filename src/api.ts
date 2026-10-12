@@ -26,6 +26,7 @@ export const updateTodo = async (id: number, completed: boolean): Promise<Todo> 
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ completed }),
   });
+  if (!res.ok) throw new Error("Не вдалося оновити задачу");
   return res.json();
 };
 

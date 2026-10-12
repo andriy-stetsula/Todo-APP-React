@@ -31,11 +31,13 @@ function App() {
       .finally(() => setLoading(false));
   }, []);
 
-  const visibleTodos = todos.filter((todo) => {
-    if (filter === "active") return !todo.completed;
-    if (filter === "completed") return todo.completed;
-    return true;
-  });
+  const visibleTodos = todos
+    .filter((todo) => {
+      if (filter === "active") return !todo.completed;
+      if (filter === "completed") return todo.completed;
+      return true;
+    })
+    .sort((a, b) => Number(a.completed) - Number(b.completed));
 
   const addTodo = async () => {
     if (!text.trim()) return;
@@ -105,6 +107,12 @@ function App() {
               type="checkbox"
               checked={todo.completed}
               onChange={() => toggleTodo(todo)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  toggleTodo(todo);
+                }
+              }}
             />
             <span>{todo.title}</span>
             <button onClick={() => deleteTodo(todo.id)}>x</button>
