@@ -4,13 +4,28 @@
   padding: 0 16px;
 }
 
-h1 {
-  text-align: center;
-  font-size: 2.5rem;
-  margin: 0 0 24px;
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
 }
 
-/* Форма */
+.header h1 {
+  font-size: 2.5rem;
+  margin: 0;
+}
+
+.theme-toggle {
+  padding: 8px 12px;
+  font-size: 1.2rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
 .form {
   display: flex;
   gap: 8px;
@@ -22,31 +37,67 @@ h1 {
   padding: 10px 12px;
   font-size: 1rem;
   color: inherit;
-  background: #23242c;
-  border: 1px solid #3a3b45;
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: 8px;
   outline: none;
 }
 
 .form input:focus {
-  border-color: #7c83ff;
+  border-color: var(--accent);
 }
 
 .form button {
   padding: 10px 16px;
   font-size: 1rem;
   color: #fff;
-  background: #5b63e6;
+  background: var(--accent);
   border: none;
   border-radius: 8px;
   cursor: pointer;
 }
 
 .form button:hover {
-  background: #6f77ff;
+  background: var(--accent-hover);
 }
 
-/* Список */
+.form button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.form button:disabled:hover {
+  background: var(--accent);
+}
+
+
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.filters button {
+  flex: 1;
+  padding: 8px;
+  font-size: 0.95rem;
+  color: var(--muted);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.filters button:hover {
+  color: var(--text);
+}
+
+.filters button.active {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
 ul {
   list-style: none;
   margin: 0;
@@ -61,14 +112,14 @@ li {
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
-  background: #23242c;
+  background: var(--card);
   border-radius: 8px;
 }
 
 li input[type="checkbox"] {
   width: 18px;
   height: 18px;
-  accent-color: #5b63e6;
+  accent-color: var(--accent);
   cursor: pointer;
 }
 
@@ -83,14 +134,13 @@ li.done span {
   opacity: 0.5;
 }
 
-/* Кнопка видалення */
 li button {
   width: 28px;
   height: 28px;
   padding: 0;
   font-size: 1rem;
   line-height: 1;
-  color: #9a9bab;
+  color: var(--muted);
   background: transparent;
   border: none;
   border-radius: 6px;
@@ -99,32 +149,5 @@ li button {
 
 li button:hover {
   color: #fff;
-  background: #e5484d;
-}
-
-.filters {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.filters button {
-  flex: 1;
-  padding: 8px;
-  font-size: 0.95rem;
-  color: #9a9bab;
-  background: #23242c;
-  border: 1px solid #3a3b45;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.filters button:hover {
-  color: #fff;
-}
-
-.filters button.active {
-  color: #fff;
-  background: #5b63e6;
-  border-color: #5b63e6;
+  background: var(--danger);
 }

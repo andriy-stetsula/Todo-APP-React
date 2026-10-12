@@ -3,12 +3,25 @@ import * as api from "./api";
 import type { Todo, Filter } from "./types";
 import "./App.css";
 
+type Theme = "light" | "dark";
+
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
+  const [theme, setTheme] = useState<Theme>(() => {
+    const saved = localStorage.getItem("theme");
+    return saved === "light" ? "light" : "dark";
+  });
+
+  const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   useEffect(() => {
     api
@@ -43,7 +56,12 @@ function App() {
 
   return (
     <div className="app">
-      <h1>Todo</h1>
+      <div className="header">
+        <h1>Todo</h1>
+        <button className="theme-toggle" onClick={toggleTheme}>
+          {theme === "dark" ? "☀️" : "🌙"}
+        </button>
+      </div>
       <div className="form">
         <input
           value={text}
@@ -51,7 +69,9 @@ function App() {
           onKeyDown={(event) => event.key === "Enter" && addTodo()}
           placeholder="Нова задача"
         />
-        <button onClick={addTodo}>Додати</button>
+        <button onClick={addTodo} disabled={!text.trim()}>
+          Додати
+        </button>
       </div>
 
       {loading && <p>Завантаження...</p>}

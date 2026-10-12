@@ -1,7 +1,24 @@
 :root {
+  --bg: #16171d;
+  --text: #e8e8ee;
+  --card: #23242c;
+  --border: #3a3b45;
+  --muted: #9a9bab;
+  --accent: #5b63e6;
+  --accent-hover: #6f77ff;
+  --danger: #e5484d;
+
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  color: #e8e8ee;
-  background-color: #16171d;
+  color: var(--text);
+  background-color: var(--bg);
+}
+
+:root[data-theme="light"] {
+  --bg: #f5f6fa;
+  --text: #1c1d24;
+  --card: #ffffff;
+  --border: #d9dbe5;
+  --muted: #6b6d7e;
 }
 
 * {
