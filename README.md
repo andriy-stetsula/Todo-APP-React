@@ -1,32 +1,79 @@
-# React + TypeScript + Vite
+# Todo App
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Простий застосунок для керування задачами на React + TypeScript. Підтримує фільтрацію, пошук, редагування назв, лічильник задач і світлу/темну теми.
 
-Currently, two official plugins are available:
+🔗 **[Демо](https://andriy-stetsula.github.io/Todo-APP-React/)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Можливості
 
-## React Compiler
+- Додавання нових задач (кнопка або Enter)
+- Позначення задач виконаними
+- Видалення окремої задачі
+- Редагування назви задачі (збереження через API, порожня назва не дозволяється, Enter зберігає, Escape скасовує)
+- Фільтри: **All**, **Active**, **Complete**
+- Фільтрація за назвою
+- Лічильник: «Активних: N · Виконаних: M»
+- Кнопка **Clear completed** для видалення всіх виконаних задач
+- Світла і темна теми (вибір зберігається в `localStorage`)
+- Індикатор завантаження та повідомлення про помилки
+- Адаптивна верстка
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Технології
 
-## Expanding the Oxlint configuration
+- [React](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vite.dev/)
+- [Oxlint](https://oxc.rs/docs/guide/usage/linter)
+- CSS (змінні для тем, flexbox)
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## Запуск проєкту
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+1. Клонуй репозиторій:
+
+```bash
+git clone https://github.com/andriy-stetsula/Todo-APP-React.git
+cd Todo-APP-React
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+2. Встанови залежності:
+
+```bash
+npm install
+```
+
+3. Запусти dev-сервер:
+
+```bash
+npm run dev
+```
+
+Застосунок буде доступний за адресою, яку виведе Vite (зазвичай `http://localhost:5173`).
+
+## Збірка
+
+```bash
+npm run build
+```
+
+Готова збірка з'явиться в папці `dist`.
+
+## Структура проєкту
+
+```
+src/
+├── api.ts        # запити до сервера (отримання, додавання, оновлення, видалення задач)
+├── types.ts      # типи Todo і Filter
+├── App.tsx       # головний компонент
+├── App.css       # стилі та змінні тем
+└── main.tsx      # точка входу
+```
+
+## Як це працює
+
+- Список задач зберігається в стані `todos`, а лічильники і відфільтрований список обчислюються з нього.
+- Усі зміни (додавання, оновлення, видалення) спочатку відправляються на сервер через `api.ts`, і тільки після успішної відповіді оновлюється стан.
+- Тема перемикається атрибутом `data-theme` на `<html>`, а кольори задаються CSS-змінними.
+
+## Автор
+
+[andriy-stetsula](https://github.com/andriy-stetsula)
