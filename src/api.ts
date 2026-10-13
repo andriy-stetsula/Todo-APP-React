@@ -33,3 +33,13 @@ export const updateTodo = async (id: number, completed: boolean): Promise<Todo> 
 export const deleteTodo = async (id: number) => {
   await fetch(`${API_URL}/${id}`, { method: "DELETE" });
 };
+
+export async function updateTodoTitle(id: number, title: string): Promise<Todo> {
+  const response = await fetch(`${API_URL}/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title }),
+  });
+  if (!response.ok) throw new Error("Не вдалося оновити задачу");
+  return response.json();
+}

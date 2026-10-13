@@ -9,13 +9,43 @@ function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(true);
+  const [found, setFound] = useState("");
   const [error, setError] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editText, setEditText] = useState("");
   const [theme, setTheme] = useState<Theme>(() => {
     const saved = localStorage.getItem("theme");
     return saved === "light" ? "light" : "dark";
   });
 
+  const startEdit = (todo: Todo) => {
+    setEditingId(todo.id);
+    setEditText(todo.title);
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditText("");
+  };
+
+  const savedEdit = async (id: number) => {
+    const title = editText.trim();
+    if (!title) return;
+
+    try {
+      const updated = await api.updateTodoTitle(id, title);
+      setTodos((prev) =>
+        prev.map((todo) => (todo.id === updated.id ? updated : todo)),
+      );
+      cancelEdit();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Помилка");
+    }
+  };
+
+  const completedCount = todos.filter((todo) => todo.completed).length;
+  const activeCount = todos.filter((todo) => !todo.completed).length;
   const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
 
   useEffect(() => {
@@ -37,13 +67,27 @@ function App() {
       if (filter === "completed") return todo.completed;
       return true;
     })
-    .sort((a, b) => Number(a.completed) - Number(b.completed));
+    .sort((a, b) => Number(a.completed) - Number(b.completed))
+    .filter((todo) =>
+      todo.title.toLowerCase().includes(found.trim().toLowerCase()),
+    );
 
   const addTodo = async () => {
     if (!text.trim()) return;
     const newTodo = await api.addTodo(text.trim());
     setTodos([...todos, newTodo]);
     setText("");
+  };
+
+  const clearComplete = async () => {
+    const completeTodos = todos.filter((todo) => todo.completed);
+
+    try {
+      await Promise.all(completeTodos.map((todo) => api.deleteTodo(todo.id)));
+      setTodos((prev) => prev.filter((todo) => !todo.completed));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Помилка");
+    }
   };
 
   const toggleTodo = async (todo: Todo) => {
@@ -53,7 +97,7 @@ function App() {
 
   const deleteTodo = async (id: number) => {
     await api.deleteTodo(id);
-    setTodos(todos.filter((t) => t.id !== id));
+    setTodos(todos.filter((todo) => todo.id !== id));
   };
 
   return (
@@ -64,6 +108,21 @@ function App() {
           {theme === "dark" ? "☀️" : "🌙"}
         </button>
       </div>
+
+      <div className="found">
+        <input
+          value={found}
+          onChange={(event) => setFound(event.target.value)}
+          placeholder="Фільтрація за назвою"
+        />
+      </div>
+
+      <div className="counter">
+        <p>
+          Активних: {activeCount} · Виконаних: {completedCount}
+        </p>
+      </div>
+
       <div className="form">
         <input
           value={text}
@@ -107,18 +166,65 @@ function App() {
               type="checkbox"
               checked={todo.completed}
               onChange={() => toggleTodo(todo)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  event.preventDefault();
-                  toggleTodo(todo);
-                }
-              }}
+              disabled={editingId === todo.id}
             />
-            <span>{todo.title}</span>
-            <button onClick={() => deleteTodo(todo.id)}>x</button>
+
+            {editingId === todo.id ? (
+              <>
+                <input
+                  className="edit-input"
+                  value={editText}
+                  onChange={(event) => setEditText(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") savedEdit(todo.id);
+                    if (event.key === "Escape") cancelEdit();
+                  }}
+                  autoFocus
+                />
+                <div className="item-actions">
+                  <button
+                    className="save-btn"
+                    onClick={() => savedEdit(todo.id)}
+                    disabled={!editText.trim()}
+                  >
+                    Зберегти
+                  </button>
+
+                  <button className="cancel-btn" onClick={cancelEdit}>
+                    Скасувати
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <span>{todo.title}</span>
+                <div className="item-actions">
+                  <button className="edit-btn" onClick={() => startEdit(todo)}>
+                    Редагувати
+                  </button>
+                  <button onClick={() => deleteTodo(todo.id)}>x</button>
+                </div>
+              </>
+            )}
           </li>
         ))}
       </ul>
+
+      {!loading && visibleTodos.length === 0 && (
+        <p className="emply">
+          {todos.length === 0 ? "Задач ще немає" : "Нічого не знайдено"}
+        </p>
+      )}
+
+      <div className="footer">
+        <button
+          className="clear-btn"
+          onClick={clearComplete}
+          disabled={!todos.some((t) => t.completed)}
+        >
+          Clear completed
+        </button>
+      </div>
     </div>
   );
 }

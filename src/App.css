@@ -1,8 +1,39 @@
+:root,
+:root[data-theme="dark"] {
+  --bg: #16171d;
+  --card: #23242d;
+  --border: #3a3b46;
+  --text: #f2f2f5;
+  --muted: #8b8d9a;
+  --accent: #5b63e0;
+  --accent-hover: #4b52cc;
+  --danger: #e05b5b;
+}
+
+:root[data-theme="light"] {
+  --bg: #f4f5f9;
+  --card: #ffffff;
+  --border: #d9dbe5;
+  --text: #1a1a1f;
+  --muted: #6b6d7a;
+  --accent: #5b63e0;
+  --accent-hover: #4b52cc;
+  --danger: #d64545;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background: var(--bg);
+  transition: background 0.2s, color 0.2s;
+}
+
 .app {
   width: 100%;
   max-width: 480px;
   margin: 24px auto;
   padding: 0 16px;
+  box-sizing: border-box;
 }
 
 .header {
@@ -29,48 +60,81 @@
 
 .form {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   margin-bottom: 24px;
 }
 
 .form input {
   flex: 1;
   min-width: 0;
-  padding: 10px 12px;
-  font-size: 1rem;
-  color: inherit;
+  padding: 14px 18px;
+  font-size: 16px;
+  color: var(--text);
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 12px;
   outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form input::placeholder {
+  color: var(--muted);
 }
 
 .form input:focus {
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(91, 99, 224, 0.25);
 }
 
 .form button {
-  padding: 10px 16px;
-  font-size: 1rem;
+  padding: 0 24px;
+  font-size: 16px;
+  font-weight: 600;
   color: #fff;
   background: var(--accent);
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   white-space: nowrap;
+  transition: background 0.2s, transform 0.1s, opacity 0.2s;
 }
 
-.form button:hover {
+.form button:hover:not(:disabled) {
   background: var(--accent-hover);
 }
 
+.form button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
 .form button:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
-.form button:disabled:hover {
-  background: var(--accent);
+.found {
+  margin-bottom: 16px;
+}
+
+.found input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.found input::placeholder {
+  color: var(--muted);
+}
+
+.found input:focus {
+  border-color: var(--accent);
 }
 
 .filters {
@@ -89,6 +153,7 @@
   border: 1px solid var(--border);
   border-radius: 8px;
   cursor: pointer;
+  transition: color 0.2s, background 0.2s;
 }
 
 .filters button:hover {
@@ -112,6 +177,7 @@ ul {
 
 li {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
@@ -141,31 +207,123 @@ li.done span {
 
 li button {
   flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  font-size: 1rem;
-  line-height: 1;
+  height: 32px;
+  padding: 0 12px;
+  font-size: 0.85rem;
+  white-space: nowrap;
   color: var(--muted);
   background: transparent;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  transition: color 0.2s, background 0.2s;
 }
 
-li button:hover {
+.item-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.edit-btn:hover,
+.cancel-btn:hover {
+  color: var(--text);
+  background: var(--border);
+}
+
+.delete-btn {
+  width: 32px;
+  padding: 0;
+  font-size: 1rem;
+}
+
+.delete-btn:hover {
   color: #fff;
   background: var(--danger);
 }
+
+.save-btn {
+  color: #fff;
+  background: var(--accent);
+}
+
+.save-btn:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.save-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.edit-input {
+  flex: 1 1 120px;
+  min-width: 0;
+  padding: 6px 10px;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  outline: none;
+}
+
+.empty {
+  text-align: center;
+  color: var(--muted);
+  margin: 16px 0;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.clear-btn {
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  color: var(--danger);
+  background: transparent;
+  border: 1px solid var(--danger);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.clear-btn:hover:not(:disabled) {
+  color: #fff;
+  background: var(--danger);
+}
+
+.clear-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+
+.counter {
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  text-align: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.counter p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
 
 @media (max-width: 480px) {
   .app {
     margin: 16px auto;
     padding: 0 12px;
-  }
-
-  .form input {
-    font-size: 16px;
   }
 
   .form input,
@@ -185,8 +343,11 @@ li button:hover {
   }
 
   li button {
-    width: 36px;
     height: 36px;
+  }
+
+  .delete-btn {
+    width: 36px;
   }
 }
 
@@ -209,11 +370,13 @@ li button:hover {
 }
 
 @media (hover: none) {
-  .form button:hover {
-    background: var(--accent);
+  .delete-btn:hover {
+    color: var(--muted);
+    background: transparent;
   }
 
-  li button:hover {
+  .edit-btn:hover,
+  .cancel-btn:hover {
     color: var(--muted);
     background: transparent;
   }
