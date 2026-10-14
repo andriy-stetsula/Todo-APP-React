@@ -11,12 +11,19 @@ export const getTodos = async (): Promise<Todo[]> => {
 };
 
 export const addTodo = async (title: string): Promise<Todo> => {
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userId: USER_ID, title, completed: false }),
-  });
-  return res.json();
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: USER_ID, title, completed: false }),
+    });
+    if (!res.ok) throw new Error("Не вдалося додати задачу");
+    return await res.json();
+  } catch (e) {
+    throw new Error(
+      e instanceof Error ? e.message : "Помилка з'єднання з сервером"
+    );
+  }
 };
 
 

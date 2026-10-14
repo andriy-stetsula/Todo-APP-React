@@ -166,6 +166,7 @@ function App() {
               type="checkbox"
               checked={todo.completed}
               onChange={() => toggleTodo(todo)}
+              onKeyDown={(event) => event.key === "Enter" && toggleTodo(todo)}
               disabled={editingId === todo.id}
             />
 
